@@ -418,6 +418,156 @@ header h1{
   .card-actions{gap:5px}
   .edit-toggle,.delete-leg-btn{padding:5px 10px;font-size:11px}
 }
+
+/* ── CHAT DRAWER ─────────────────────────────────────────────────────── */
+.chat-fab{
+  position:fixed;bottom:24px;right:20px;z-index:200;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--sea-dark);
+  border:2px solid rgba(255,255,255,.25);
+  box-shadow:0 4px 20px rgba(5,46,59,.4);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:22px;transition:transform .2s,box-shadow .2s;
+}
+.chat-fab:hover{transform:scale(1.07);box-shadow:0 6px 28px rgba(5,46,59,.5)}
+.chat-fab:active{transform:scale(.95)}
+.chat-fab .fab-badge{
+  position:absolute;top:-3px;right:-3px;
+  width:18px;height:18px;border-radius:50%;
+  background:#EF4444;color:white;
+  font-size:10px;font-weight:600;
+  display:none;align-items:center;justify-content:center;
+  border:2px solid white;
+}
+.chat-fab .fab-badge.show{display:flex}
+
+.chat-drawer{
+  position:fixed;bottom:0;right:0;z-index:300;
+  width:100%;max-width:420px;
+  height:82vh;max-height:680px;
+  background:white;
+  border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 40px rgba(5,46,59,.25);
+  display:flex;flex-direction:column;
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.32,.72,0,1);
+}
+@media(min-width:480px){
+  .chat-drawer{
+    bottom:88px;right:20px;
+    border-radius:20px;
+    height:72vh;
+    transform:translateY(20px);
+    opacity:0;
+    transition:transform .25s cubic-bezier(.32,.72,0,1), opacity .25s ease;
+  }
+  .chat-drawer.open{transform:translateY(0);opacity:1}
+}
+.chat-drawer.open{transform:translateY(0)}
+
+.chat-drawer-handle{
+  width:36px;height:4px;background:#D1D5DB;border-radius:2px;
+  margin:10px auto 0;flex-shrink:0;
+}
+@media(min-width:480px){.chat-drawer-handle{display:none}}
+
+.chat-drawer-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px 10px;
+  border-bottom:1px solid #F0F0F0;
+  flex-shrink:0;
+}
+.chat-header-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sea-dark),var(--aqua));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.chat-header-info{flex:1;min-width:0}
+.chat-header-name{font-size:14px;font-weight:500;color:var(--ink)}
+.chat-header-sub{font-size:11px;color:#9CA3AF;margin-top:1px}
+.chat-close-btn{
+  background:none;border:none;font-size:20px;cursor:pointer;
+  color:#9CA3AF;padding:4px;border-radius:6px;min-width:32px;min-height:32px;
+}
+.chat-close-btn:hover{color:var(--ink)}
+
+.chat-messages{
+  flex:1;overflow-y:auto;padding:14px 14px 8px;
+  display:flex;flex-direction:column;gap:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.chat-msg{display:flex;gap:8px;align-items:flex-end;max-width:100%}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-bubble{
+  max-width:78%;padding:10px 14px;border-radius:16px;
+  font-size:13px;line-height:1.55;font-family:'Inter',sans-serif;
+}
+.chat-msg.assistant .chat-bubble{
+  background:#F3F4F6;color:var(--ink);
+  border-bottom-left-radius:4px;
+}
+.chat-msg.user .chat-bubble{
+  background:var(--sea-dark);color:white;
+  border-bottom-right-radius:4px;
+}
+.chat-msg-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--sea-dark),var(--aqua));
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.chat-typing{display:flex;align-items:center;gap:4px;padding:10px 14px}
+.chat-typing span{
+  width:7px;height:7px;border-radius:50%;background:#9CA3AF;
+  animation:typing-bounce .9s infinite;
+}
+.chat-typing span:nth-child(2){animation-delay:.15s}
+.chat-typing span:nth-child(3){animation-delay:.3s}
+@keyframes typing-bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+.chat-input-row{
+  display:flex;gap:8px;align-items:flex-end;
+  padding:10px 12px;
+  border-top:1px solid #F0F0F0;
+  background:white;flex-shrink:0;
+  border-radius:0 0 0 0;
+  padding-bottom:max(10px,env(safe-area-inset-bottom));
+}
+@media(min-width:480px){
+  .chat-input-row{border-radius:0 0 20px 20px}
+}
+.chat-input{
+  flex:1;font-size:14px;font-family:'Inter',sans-serif;
+  border:1px solid #E5E7EB;border-radius:12px;
+  padding:10px 14px;outline:none;resize:none;
+  max-height:120px;min-height:42px;line-height:1.4;
+  transition:border-color .15s;
+  -webkit-appearance:none;
+}
+.chat-input:focus{border-color:var(--sea)}
+.chat-send-btn{
+  width:42px;height:42px;border-radius:12px;
+  background:var(--sea-dark);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:opacity .15s;font-size:16px;
+}
+.chat-send-btn:active{opacity:.7}
+.chat-send-btn:disabled{opacity:.35;cursor:default}
+.chat-suggestions{
+  display:flex;gap:6px;padding:0 12px 8px;
+  overflow-x:auto;flex-shrink:0;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.chat-suggestions::-webkit-scrollbar{display:none}
+.chat-suggestion{
+  font-size:11px;font-family:'Inter',sans-serif;
+  white-space:nowrap;padding:5px 12px;
+  border:1px solid #E5E7EB;border-radius:20px;
+  background:white;color:#374151;cursor:pointer;
+  transition:all .15s;flex-shrink:0;min-height:30px;
+}
+.chat-suggestion:active{background:#F3F4F6;border-color:#D1D5DB}
 </style>
 </head>
 <body>
@@ -984,6 +1134,241 @@ function initBackground(){
 
 loadData();
 initBackground();
+
+/* ── CHAT DRAWER ─────────────────────────────────────────────────────── */
+const ANTHROPIC_KEY = 'YOUR_ANTHROPIC_API_KEY'; // replace with your key
+let chatOpen = false;
+let chatHistory = [];
+let chatWaiting = false;
+let unreadCount = 0;
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  const drawer = document.getElementById('chat-drawer');
+  drawer.classList.toggle('open', chatOpen);
+  if(chatOpen){
+    unreadCount = 0;
+    updateBadge();
+    if(chatHistory.length === 0) showWelcome();
+    setTimeout(()=>document.getElementById('chat-input').focus(), 350);
+  }
+}
+
+function showWelcome(){
+  addMessage('assistant',
+    "Hey! I know your full Greece & Türkiye itinerary — dates, flights, stays, and what's still to book. Ask me anything: logistics, restaurant picks, day trips, what to pack, visa questions, you name it. 🌊"
+  );
+}
+
+function buildSystemPrompt(){
+  const legs = allLegs();
+  const items = legs.map(l => {
+    const d = tripData[l.id] || {};
+    const status = d.status || l.status;
+    const dateLabel = d._dateLabel || l.date || '';
+    const fields = Object.entries(d.fields||{})
+      .filter(([k,v])=>v)
+      .map(([k,v])=>`${k}: ${v}`)
+      .join(', ');
+    const acts = (d.activities||[]).map(a=>
+      `    • ${a.name}${a.date?' on '+fmtDate(a.date):''}${a.t0?' at '+fmtTime(a.t0):''}${a.addr?' @ '+a.addr:''}`
+    ).join('\n');
+    return [
+      `- [${status.toUpperCase()}] ${l.name} (${dateLabel})`,
+      l.detail ? `  ${l.detail}` : '',
+      l.todo   ? `  TO BOOK: ${l.todo}` : '',
+      fields   ? `  Details: ${fields}` : '',
+      d.note   ? `  Note: ${d.note}` : '',
+      acts     ? `  Activities:\n${acts}` : '',
+    ].filter(Boolean).join('\n');
+  }).join('\n');
+
+  return `You are a friendly, knowledgeable travel assistant embedded in a trip planning app for a Greece and Türkiye trip in summer 2026. You have full access to the traveler's current itinerary below.
+
+Be concise and conversational — this is a mobile chat interface. Use bullet points for lists. Give specific, opinionated recommendations rather than vague suggestions. You know Greek islands, the Aegean, Athens, Thessaloniki, and Istanbul well.
+
+CURRENT ITINERARY:
+${items}
+
+Key context:
+- Trip runs May 25 – June 9, 2026
+- Flying out of RDU (Raleigh-Durham)
+- Group has 2 rooms booked at Grand Hyatt Athens
+- Naxos and Thessaloniki stays are VRBOs
+- Thessaloniki → Istanbul on Turkish Air (booked via United), Jun 6
+- Still need to book: Athens→Naxos transit, Naxos→Thessaloniki transit, Istanbul accommodation, Istanbul→Athens return
+- Thessaloniki stay may extend 1 night to Jun 6
+
+When asked about logistics, factor in actual travel times and connections. When recommending restaurants or activities, be specific with names. Keep responses tight — 3-5 sentences or a short bullet list unless they ask for more detail.`;
+}
+
+function addMessage(role, text){
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = formatChatText(text);
+
+  if(role === 'assistant'){
+    const av = document.createElement('div');
+    av.className = 'chat-msg-avatar';
+    av.textContent = '🧭';
+    div.appendChild(av);
+  }
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  if(!chatOpen && role === 'assistant'){
+    unreadCount++;
+    updateBadge();
+  }
+}
+
+function formatChatText(text){
+  // Convert markdown-ish to HTML
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^• (.+)$/gm,'<li>$1</li>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, s=>`<ul style="padding-left:16px;margin:4px 0">${s}</ul>`)
+    .replace(/\n/g,'<br>');
+}
+
+function showTyping(){
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  div.id = 'typing-indicator';
+  const av = document.createElement('div');
+  av.className = 'chat-msg-avatar';
+  av.textContent = '🧭';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div>';
+  div.appendChild(av);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping(){
+  const el = document.getElementById('typing-indicator');
+  if(el) el.remove();
+}
+
+function updateBadge(){
+  const badge = document.getElementById('fab-badge');
+  if(unreadCount > 0 && !chatOpen){
+    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+function autoResizeInput(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function sendSuggestion(btn){
+  const text = btn.textContent;
+  document.getElementById('chat-suggestions').style.display = 'none';
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+async function sendChat(){
+  if(chatWaiting) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  addMessage('user', text);
+  chatHistory.push({role:'user', content:text});
+
+  chatWaiting = true;
+  document.getElementById('chat-send-btn').disabled = true;
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: buildSystemPrompt(),
+        messages: chatHistory,
+      })
+    });
+
+    const data = await res.json();
+    hideTyping();
+
+    if(data.content && data.content[0]){
+      const reply = data.content[0].text;
+      chatHistory.push({role:'assistant', content:reply});
+      // Keep history from growing too large
+      if(chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+      addMessage('assistant', reply);
+    } else {
+      addMessage('assistant', "Sorry, I couldn't get a response. Check your API key or try again.");
+    }
+  } catch(e) {
+    hideTyping();
+    addMessage('assistant', "Connection error — make sure your API key is set and try again.");
+  }
+
+  chatWaiting = false;
+  document.getElementById('chat-send-btn').disabled = false;
+  document.getElementById('chat-input').focus();
+}
 </script>
+<!-- CHAT FAB -->
+<button class="chat-fab" id="chat-fab" onclick="toggleChat()" aria-label="Open trip assistant">
+  💬
+  <div class="fab-badge" id="fab-badge"></div>
+</button>
+
+<!-- CHAT DRAWER -->
+<div class="chat-drawer" id="chat-drawer">
+  <div class="chat-drawer-handle"></div>
+  <div class="chat-drawer-header">
+    <div class="chat-header-avatar">🧭</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">Trip Assistant</div>
+      <div class="chat-header-sub">Knows your full itinerary</div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-suggestions" id="chat-suggestions">
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">What's still to book?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Best way Athens → Naxos?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Restaurants in Thessaloniki</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Day trips from Istanbul</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">What to pack?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Ferry schedule tips</button>
+  </div>
+  <div class="chat-input-row">
+    <textarea class="chat-input" id="chat-input" placeholder="Ask anything about the trip…" rows="1"
+      oninput="autoResizeInput(this)"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+    <button class="chat-send-btn" id="chat-send-btn" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
 </body>
-</html>
