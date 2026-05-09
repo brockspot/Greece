@@ -64,11 +64,12 @@ body{
 /* ── BACKGROUND ─────────────────────────────────────────────────────── */
 .bg-photo{
   position:fixed;inset:0;z-index:0;
-  background-image: url('https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=1400&q=80&auto=format&fit=crop');
   background-size:cover;
-  background-position:center 40%;
-  filter:saturate(1.15);
+  background-position:center 45%;
+  filter:saturate(1.1);
+  transition:opacity 1.8s ease;
 }
+.bg-photo.fading{opacity:0}
 .bg-overlay{
   position:fixed;inset:0;z-index:1;
   background: linear-gradient(
@@ -207,6 +208,7 @@ header h1{
 }
 .pill-confirmed{background:var(--conf-bg);color:var(--conf-tx)}
 .pill-pending{background:var(--pend-bg);color:var(--pend-tx)}
+.pill-warn{background:rgba(220,38,38,.1);color:#B91C1C;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;border:1px solid rgba(220,38,38,.25)}
 .leg-date{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300}
 .leg-detail{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.65;font-weight:300}
 .todo-hint{
@@ -420,7 +422,7 @@ header h1{
 </head>
 <body>
 
-<div class="bg-photo"></div>
+<div class="bg-photo fading" id="bg-photo"></div>
 <div class="bg-overlay"></div>
 
 <div class="page">
@@ -550,11 +552,11 @@ const SUPABASE_URL='https://pzefzoypgfwytehjosgt.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZWZ6b3lwZ2Z3eXRlaGpvc2d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTMwMzQsImV4cCI6MjA5Mzg2OTAzNH0.J4zxmWTMDJNMFKWvJDWqan9opxl0gfNYPLE_jRqlqXk';
 
 const BASE_LEGS=[
-  {id:'rdu-jfk',type:'flight',name:'RDU → JFK',date:'May 26',sd:'2026-05-26',
+  {id:'rdu-jfk',type:'flight',name:'RDU → JFK',date:'May 25',sd:'2026-05-25',
    detail:'American Airlines · Leg 1 outbound',
    fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 1234'},{label:'Depart time',key:'dt',ph:'e.g. 7:00 AM'}],status:'pending',order:0},
-  {id:'jfk-ath',type:'flight',name:'JFK → ATH',date:'May 26',sd:'2026-05-26',
-   detail:'American Airlines · Arrive Athens ~10:00 AM local',
+  {id:'jfk-ath',type:'flight',name:'JFK → ATH',date:'May 25 (arrives May 26)',sd:'2026-05-25',ed:'2026-05-26',
+   detail:'American Airlines · Departs JFK May 25 · Arrives Athens ~10:00 AM May 26',
    fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 100'},{label:'Depart JFK',key:'dt',ph:'e.g. 11:55 PM'}],status:'confirmed',order:10},
   {id:'ath-hotel',type:'stay',name:'Athens — Grand Hyatt',date:'May 26–29 · 3 nights',sd:'2026-05-26',ed:'2026-05-29',
    detail:'2 rooms booked · Check-in May 26 · Check-out May 29',
@@ -662,6 +664,12 @@ function render(){
 
     // build fields
     const fk=(f)=>f.key+'_'+leg.id;
+    // date overrides stored in tripData
+    const sdVal = d._sd || leg.sd || '';
+    const edVal = d._ed || leg.ed || '';
+    // displayed date label: use override if set, else original
+    const displayDate = d._dateLabel || leg.date || '';
+
     let fHTML='<div class="field-grid">';
     (leg.fields||[]).forEach(f=>{
       const v=(d.fields&&d.fields[fk(f)])||'';
@@ -670,6 +678,19 @@ function render(){
           oninput="updateField('${leg.id}','${fk(f)}',this.value)" autocomplete="off"></div>`;
     });
     fHTML+='</div>';
+    // date editing row
+    fHTML+=`<div class="field-grid" style="margin-top:10px">
+      <div class="field-row">
+        <div class="field-label">Start date</div>
+        <input class="field-input" type="date" value="${sdVal}"
+          onchange="updateLegDate('${leg.id}','sd',this.value)">
+      </div>
+      <div class="field-row">
+        <div class="field-label">End date <span style="font-size:9px;color:var(--muted)">(optional)</span></div>
+        <input class="field-input" type="date" value="${edVal}"
+          onchange="updateLegDate('${leg.id}','ed',this.value)">
+      </div>
+    </div>`;
     fHTML+=`<div class="field-row" style="margin-top:10px"><div class="field-label">Notes</div>
       <input class="field-input" type="text" placeholder="Add a note…" value="${esc(d.note||'')}"
         oninput="updateNote('${leg.id}',this.value)" autocomplete="off"></div>`;
@@ -719,6 +740,10 @@ function render(){
     }
     aHTML+='</div>';
 
+    // warn if Stay has no end date
+    const missingEnd = leg.type==='stay' && !edVal;
+    const warnPill = missingEnd ? `<span class="pill-warn">⚠ no check-out date</span>` : '';
+
     const wrapper=document.createElement('div');
     wrapper.className='leg';
     wrapper.innerHTML=`
@@ -734,8 +759,9 @@ function render(){
                 <span class="status-pill ${status==='confirmed'?'pill-confirmed':'pill-pending'}">
                   ${status==='confirmed'?'confirmed':'to book'}
                 </span>
+                ${warnPill}
               </div>
-              <div class="leg-date">${esc(leg.date||'')}</div>
+              <div class="leg-date">${esc(displayDate)}</div>
             </div>
             <div class="card-actions">
               <button class="edit-toggle" onclick="togglePanel('${leg.id}')">${isOpen?'done':'edit'}</button>
@@ -832,7 +858,9 @@ function openActModal(legId){
   ['err-act-name','err-act-date'].forEach(id=>document.getElementById(id).style.display='none');
   const leg=allLegs().find(l=>l.id===legId);
   const di=document.getElementById('act-date');
-  di.min=leg&&leg.sd?leg.sd:'';di.max=leg&&leg.ed?leg.ed:'';
+  const ld=tripData[legId]||{};
+  di.min=(ld._sd||leg&&leg.sd)||'';
+  di.max=(ld._ed||leg&&leg.ed)||'';
   document.getElementById('act-modal').style.display='flex';
   setTimeout(()=>document.getElementById('act-name').focus(),80);
 }
@@ -852,7 +880,9 @@ function openEditAct(legId,actId){
   ['err-act-name','err-act-date'].forEach(id=>document.getElementById(id).style.display='none');
   const leg=allLegs().find(l=>l.id===legId);
   const di=document.getElementById('act-date');
-  di.min=leg&&leg.sd?leg.sd:'';di.max=leg&&leg.ed?leg.ed:'';
+  const ld=tripData[legId]||{};
+  di.min=(ld._sd||leg&&leg.sd)||'';
+  di.max=(ld._ed||leg&&leg.ed)||'';
   document.getElementById('act-modal').style.display='flex';
 }
 function closeActModal(){document.getElementById('act-modal').style.display='none';}
@@ -890,6 +920,19 @@ function togglePanel(id){openPanels[id]=!openPanels[id];render();}
 function updateField(legId,key,val){const d=getLegData(legId);if(!d.fields)d.fields={};d.fields[key]=val;scheduleSave();}
 function updateNote(legId,val){getLegData(legId).note=val;scheduleSave();}
 function updateStatus(legId,val){getLegData(legId).status=val;scheduleSave();document.getElementById('todo-count').textContent=todoCount();}
+function updateLegDate(legId,which,val){
+  const d=getLegData(legId);
+  d[which]=val; // store _sd or _ed override
+  // rebuild the human label from whatever is now set
+  const sd=d._sd||'';
+  const ed=d._ed||'';
+  if(sd&&ed) d._dateLabel=`${fmtDate(sd)} – ${fmtDate(ed)}`;
+  else if(sd) d._dateLabel=fmtDate(sd);
+  else d._dateLabel='';
+  // also update sd/ed used for activity date validation
+  d._sd=sd;d._ed=ed;
+  scheduleSave();render();
+}
 
 /* ── HIDDEN LEGS FILTER ─────────────────────────────────────────────── */
 const _origAllLegs=allLegs;
@@ -900,7 +943,47 @@ function allLegs(){
     .sort((a,b)=>(a.order||0)-(b.order||0));
 }
 
+/* ── BACKGROUND ROTATION ────────────────────────────────────────────── */
+const BG_PHOTOS = [
+  // Navagio / Shipwreck Beach, Zakynthos — iconic turquoise cove
+  { url:'https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?w=1600&q=85&auto=format&fit=crop', pos:'center 55%' },
+  // Myrtos Beach, Kefalonia — vivid turquoise & white cliffs
+  { url:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&q=85&auto=format&fit=crop', pos:'center 50%' },
+  // Santorini caldera & sea — blue domes, deep Aegean
+  { url:'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1600&q=85&auto=format&fit=crop', pos:'center 40%' },
+  // Crystal clear Aegean shallows — overhead turquoise water
+  { url:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=1600&q=85&auto=format&fit=crop', pos:'center 60%' },
+  // Oludeniz Blue Lagoon, Turkey — where Aegean meets Med
+  { url:'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=1600&q=85&auto=format&fit=crop', pos:'center 50%' },
+  // Greek island beach — white sand, turquoise shallows, hillside
+  { url:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1600&q=85&auto=format&fit=crop', pos:'center 55%' },
+];
+
+function initBackground(){
+  // Pick photo based on day-of-year so everyone sees the same one each day
+  // but it changes daily
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  const photo = BG_PHOTOS[dayOfYear % BG_PHOTOS.length];
+  const el = document.getElementById('bg-photo');
+  // Preload then crossfade in
+  const img = new Image();
+  img.onload = () => {
+    el.style.backgroundImage = `url('${photo.url}')`;
+    el.style.backgroundPosition = photo.pos;
+    el.classList.remove('fading');
+  };
+  img.onerror = () => {
+    // fallback to next photo
+    const fallback = BG_PHOTOS[(dayOfYear + 1) % BG_PHOTOS.length];
+    el.style.backgroundImage = `url('${fallback.url}')`;
+    el.classList.remove('fading');
+  };
+  el.classList.add('fading');
+  img.src = photo.url;
+}
+
 loadData();
+initBackground();
 </script>
 </body>
 </html>
