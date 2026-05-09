@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Greece & Türkiye · Summer 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────────────── */
+:root{
+  --sea:       #0B6E8C;
+  --sea-dark:  #084D63;
+  --sea-deep:  #052E3B;
+  --aqua:      #3DBFD4;
+  --aqua-pale: rgba(61,191,212,.15);
+  --sand:      #E8D9B8;
+  --terra:     #C0683A;
+  --terra-pale:rgba(192,104,58,.15);
+  --white:     #FFFFFF;
+  --ink:       #0D1B22;
+  --muted:     rgba(13,27,34,.55);
+
+  --glass:     rgba(255,255,255,.72);
+  --glass-hov: rgba(255,255,255,.82);
+  --glass-deep:rgba(255,255,255,.55);
+  --glass-bdr: rgba(255,255,255,.5);
+  --glass-edit:rgba(240,248,252,.88);
+
+  --flight-bg: rgba(11,110,140,.12);
+  --flight-bd: rgba(11,110,140,.5);
+  --flight-tx: #074E63;
+  --stay-bg:   rgba(45,155,90,.12);
+  --stay-bd:   rgba(45,155,90,.5);
+  --stay-tx:   #1A6B3A;
+  --transit-bg:rgba(192,104,58,.12);
+  --transit-bd:rgba(192,104,58,.5);
+  --transit-tx:#8B3E1C;
+  --act-bg:    rgba(90,60,150,.12);
+  --act-bd:    rgba(90,60,150,.45);
+  --act-tx:    #3D1F7A;
+
+  --conf-bg:   rgba(45,155,90,.15);
+  --conf-tx:   #1A6B3A;
+  --pend-bg:   rgba(192,104,58,.15);
+  --pend-tx:   #8B3E1C;
+
+  --shadow:    0 4px 24px rgba(5,46,59,.18);
+  --shadow-sm: 0 2px 10px rgba(5,46,59,.12);
+  --r:         14px;
+  --r-sm:      8px;
+}
+
+/* ── RESET & BASE ───────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  color:var(--ink);
+  min-height:100vh;
+  background: var(--sea-deep);
+}
+
+/* ── BACKGROUND ─────────────────────────────────────────────────────── */
+.bg-photo{
+  position:fixed;inset:0;z-index:0;
+  background-image: url('https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=1400&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center 40%;
+  filter:saturate(1.15);
+}
+.bg-overlay{
+  position:fixed;inset:0;z-index:1;
+  background: linear-gradient(
+    to bottom,
+    rgba(5,46,59,.65) 0%,
+    rgba(5,46,59,.35) 30%,
+    rgba(5,46,59,.25) 60%,
+    rgba(5,46,59,.55) 100%
+  );
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────── */
+.page{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column}
+main{max-width:640px;width:100%;margin:0 auto;padding:0 12px 80px;flex:1}
+
+/* ── HEADER ─────────────────────────────────────────────────────────── */
+header{
+  max-width:640px;width:100%;margin:0 auto;
+  padding:env(safe-area-inset-top,16px) 20px 0;
+  padding-top:max(env(safe-area-inset-top),20px);
+}
+.header-inner{
+  padding:24px 20px 20px;
+  background:rgba(5,46,59,.55);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--r);
+  margin-bottom:0;
+}
+.header-eyebrow{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--aqua);margin-bottom:10px;font-weight:400;
+}
+header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,7vw,42px);
+  font-weight:500;line-height:1.1;
+  color:var(--white);margin-bottom:4px;
+}
+.header-sub{font-size:12px;color:rgba(255,255,255,.6);font-weight:300;letter-spacing:.02em}
+.stats-row{
+  display:flex;gap:0;
+  margin-top:18px;padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.stat{flex:1;text-align:center}
+.stat+.stat{border-left:1px solid rgba(255,255,255,.1)}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white);line-height:1}
+.stat-lbl{font-size:9px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+
+/* ── SYNC BAR ───────────────────────────────────────────────────────── */
+.sync-bar{
+  max-width:640px;width:100%;margin:0 auto;
+  padding:0 12px;
+}
+.sync-inner{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;
+  background:rgba(5,46,59,.7);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-left:1px solid rgba(255,255,255,.1);
+  border-right:1px solid rgba(255,255,255,.1);
+  border-bottom:1px solid rgba(255,255,255,.1);
+  border-radius:0 0 10px 10px;
+  margin-bottom:16px;
+}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .3s;flex-shrink:0}
+.sync-dot.syncing{background:#FBBF24;animation:pulse 1s infinite}
+.sync-dot.synced{background:#4ADE80}
+.sync-dot.error{background:#F87171}
+.sync-lbl{font-size:11px;color:rgba(255,255,255,.4)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── TIMELINE ───────────────────────────────────────────────────────── */
+.leg{display:flex;gap:0}
+.tl-col{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;padding-top:18px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0;z-index:1;background:white}
+.dot-flight{background:rgba(255,255,255,.9);border-color:var(--sea)}
+.dot-stay{background:rgba(255,255,255,.9);border-color:#2D9B5A}
+.dot-transit{background:rgba(255,255,255,.7);border-color:var(--terra);border-style:dashed}
+.dot-custom-flight{background:rgba(255,255,255,.9);border-color:var(--sea)}
+.dot-custom-stay{background:rgba(255,255,255,.9);border-color:#2D9B5A}
+.dot-custom-transit{background:rgba(255,255,255,.7);border-color:var(--terra);border-style:dashed}
+.vline{width:1px;background:rgba(255,255,255,.25);flex:1;min-height:8px}
+
+/* ── INSERT ZONE ────────────────────────────────────────────────────── */
+.insert-zone{padding-left:36px;height:36px;display:flex;align-items:center}
+.insert-trigger{
+  display:flex;align-items:center;width:100%;
+  opacity:0;transition:opacity .2s;
+}
+/* On touch devices always show insert triggers */
+@media(hover:none){.insert-trigger{opacity:1}}
+.insert-zone:hover .insert-trigger{opacity:1}
+.insert-line{flex:1;height:1px;background:rgba(255,255,255,.2)}
+.insert-btn{
+  font-size:11px;font-family:'Inter',sans-serif;
+  color:rgba(255,255,255,.7);
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:20px;
+  padding:5px 14px;
+  cursor:pointer;white-space:nowrap;
+  transition:all .15s;margin:0 10px;flex-shrink:0;
+  min-height:32px;
+}
+.insert-btn:active{background:rgba(255,255,255,.25)}
+
+/* ── CARD ───────────────────────────────────────────────────────────── */
+.leg-card{
+  flex:1;
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-bdr);
+  border-radius:var(--r);
+  margin:6px 0 6px 8px;
+  overflow:hidden;
+  transition:background .2s,box-shadow .2s;
+  box-shadow:var(--shadow-sm);
+}
+.leg-card-inner{padding:14px 16px}
+.leg-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.leg-name{
+  font-size:15px;font-weight:500;color:var(--ink);
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  line-height:1.3;
+}
+.status-pill{
+  font-size:10px;padding:3px 8px;border-radius:20px;
+  font-weight:500;white-space:nowrap;flex-shrink:0;
+}
+.pill-confirmed{background:var(--conf-bg);color:var(--conf-tx)}
+.pill-pending{background:var(--pend-bg);color:var(--pend-tx)}
+.leg-date{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300}
+.leg-detail{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.65;font-weight:300}
+.todo-hint{
+  font-size:12px;color:var(--terra);
+  margin-top:7px;line-height:1.65;font-weight:300;font-style:italic;
+  background:var(--terra-pale);border-radius:6px;padding:6px 10px;
+}
+.extend-hint{font-size:11px;color:var(--terra);margin-top:5px;font-weight:400}
+.type-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;padding:3px 9px;border-radius:5px;
+  margin-top:7px;text-transform:uppercase;letter-spacing:.07em;font-weight:500;
+}
+.type-flight{background:var(--flight-bg);color:var(--flight-tx);border:1px solid var(--flight-bd)}
+.type-stay{background:var(--stay-bg);color:var(--stay-tx);border:1px solid var(--stay-bd)}
+.type-transit{background:var(--transit-bg);color:var(--transit-tx);border:1px solid var(--transit-bd)}
+.saved-values{margin-top:7px;font-size:12px;color:var(--muted);line-height:1.7;font-weight:300}
+.saved-values span{color:var(--ink);font-weight:500}
+
+/* ── CARD ACTION BUTTONS ────────────────────────────────────────────── */
+.card-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.edit-toggle,.delete-leg-btn{
+  font-size:12px;font-family:'Inter',sans-serif;
+  background:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:var(--r-sm);
+  padding:5px 12px;cursor:pointer;transition:all .15s;
+  color:var(--ink);white-space:nowrap;
+  min-height:32px;min-width:44px;
+}
+.edit-toggle:active{background:rgba(255,255,255,.8)}
+.delete-leg-btn{color:var(--terra);border-color:rgba(192,104,58,.3);background:var(--terra-pale)}
+.delete-leg-btn:active{background:rgba(192,104,58,.25)}
+
+/* ── EDIT PANEL ─────────────────────────────────────────────────────── */
+.edit-panel{
+  border-top:1px solid rgba(255,255,255,.4);
+  padding:14px 16px;
+  background:var(--glass-edit);
+  display:none;
+}
+.edit-panel.open{display:block}
+.field-row{margin-bottom:10px}
+.field-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px;font-weight:500}
+.field-input{
+  width:100%;font-size:14px;font-family:'Inter',sans-serif;
+  border:1px solid rgba(11,110,140,.25);border-radius:var(--r-sm);
+  padding:9px 12px;background:rgba(255,255,255,.85);color:var(--ink);
+  outline:none;transition:border-color .15s;
+  -webkit-appearance:none;appearance:none;
+  min-height:42px;
+}
+.field-input:focus{border-color:var(--sea);background:white}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.status-row{
+  display:flex;align-items:center;gap:8px;
+  margin-top:12px;padding-top:12px;
+  border-top:1px solid rgba(11,110,140,.15);
+}
+.status-row label{font-size:11px;color:var(--muted);white-space:nowrap}
+.status-select{
+  font-size:13px;font-family:'Inter',sans-serif;
+  border:1px solid rgba(11,110,140,.25);border-radius:var(--r-sm);
+  padding:7px 10px;background:rgba(255,255,255,.85);color:var(--ink);
+  outline:none;flex:1;min-height:40px;
+  -webkit-appearance:none;appearance:none;
+}
+
+/* ── ACTIVITIES ─────────────────────────────────────────────────────── */
+.activities-section{
+  border-top:1px solid rgba(255,255,255,.35);
+  padding:10px 16px 8px;
+  background:rgba(255,255,255,.15);
+}
+.activities-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.activities-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.add-act-btn{
+  font-size:12px;font-family:'Inter',sans-serif;
+  color:var(--act-tx);
+  background:var(--act-bg);
+  border:1px solid var(--act-bd);
+  border-radius:var(--r-sm);
+  padding:5px 12px;cursor:pointer;transition:all .15s;
+  min-height:32px;
+}
+.add-act-btn:active{background:rgba(90,60,150,.22)}
+.activity-item{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.3);
+}
+.activity-item:last-child{border-bottom:none;padding-bottom:2px}
+.act-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--act-bg);border:1.5px solid var(--act-bd);
+  margin-top:5px;flex-shrink:0;
+}
+.act-body{flex:1;min-width:0}
+.act-name{font-size:13px;font-weight:500;color:var(--ink)}
+.act-meta{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.6}
+.act-btns{display:flex;gap:6px;flex-shrink:0;align-items:flex-start;padding-top:1px}
+.act-edit-btn,.act-del-btn{
+  font-size:11px;font-family:'Inter',sans-serif;
+  background:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:6px;padding:4px 10px;cursor:pointer;transition:all .15s;
+  min-height:30px;min-width:36px;
+  color:var(--ink);
+}
+.act-del-btn{color:var(--terra);background:var(--terra-pale);border-color:rgba(192,104,58,.3)}
+.act-del-btn:active{background:rgba(192,104,58,.25)}
+.no-acts{font-size:12px;color:var(--muted);font-style:italic;padding-bottom:6px}
+
+/* ── MODALS ─────────────────────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(5,46,59,.65);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:flex-end;justify-content:center;
+  z-index:1000;padding:0;
+}
+/* Sheet from bottom on mobile, centered on desktop */
+.modal{
+  background:white;
+  border-radius:20px 20px 0 0;
+  width:100%;max-width:520px;
+  max-height:92vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  box-shadow:0 -8px 40px rgba(5,46,59,.25);
+}
+@media(min-width:540px){
+  .modal-overlay{align-items:center;padding:1rem}
+  .modal{border-radius:16px;max-height:85vh}
+}
+.modal-handle{
+  width:36px;height:4px;background:#D1D5DB;border-radius:2px;
+  margin:10px auto 0;display:block;
+}
+@media(min-width:540px){.modal-handle{display:none}}
+.modal-header{
+  padding:16px 20px 12px;
+  border-bottom:1px solid #F0F0F0;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:white;z-index:1;
+}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--ink)}
+.modal-close{
+  background:none;border:none;font-size:22px;cursor:pointer;
+  color:#9CA3AF;line-height:1;padding:4px 6px;border-radius:6px;
+  min-height:36px;min-width:36px;
+}
+.modal-body{padding:16px 20px}
+.modal-footer{
+  padding:12px 20px;border-top:1px solid #F0F0F0;
+  display:flex;gap:10px;justify-content:flex-end;
+  position:sticky;bottom:0;background:white;z-index:1;
+}
+.m-field{margin-bottom:14px}
+.m-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#6B7280;margin-bottom:5px;font-weight:500}
+.m-input{
+  width:100%;font-size:15px;font-family:'Inter',sans-serif;
+  border:1px solid #D1D5DB;border-radius:10px;
+  padding:10px 14px;outline:none;
+  background:white;color:var(--ink);
+  transition:border-color .15s;
+  -webkit-appearance:none;appearance:none;
+  min-height:46px;
+}
+.m-input:focus{border-color:var(--sea);box-shadow:0 0 0 3px rgba(11,110,140,.1)}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.m-err{font-size:12px;color:#DC2626;margin-top:4px;display:none}
+.type-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px}
+.type-opt{
+  border:2px solid #E5E7EB;border-radius:12px;
+  padding:14px 6px;text-align:center;
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.type-opt:active{transform:scale(.97)}
+.type-opt.sel-flight{border-color:var(--sea);background:var(--flight-bg)}
+.type-opt.sel-stay{border-color:#2D9B5A;background:var(--stay-bg)}
+.type-opt.sel-transit{border-color:var(--terra);background:var(--transit-bg)}
+.type-icon{font-size:24px;margin-bottom:5px}
+.type-lbl{font-size:12px;color:var(--ink);font-weight:500}
+.btn-primary{
+  font-size:14px;font-family:'Inter',sans-serif;
+  background:var(--sea-dark);color:white;
+  border:none;border-radius:10px;padding:11px 22px;
+  cursor:pointer;transition:opacity .15s;font-weight:500;
+  min-height:46px;
+}
+.btn-primary:active{opacity:.8}
+.btn-secondary{
+  font-size:14px;font-family:'Inter',sans-serif;
+  background:none;border:1px solid #D1D5DB;
+  border-radius:10px;padding:11px 22px;
+  cursor:pointer;color:#6B7280;
+  min-height:46px;
+}
+.btn-secondary:active{background:#F9FAFB}
+
+/* ── MOBILE TWEAKS ───────────────────────────────────────────────────── */
+@media(max-width:480px){
+  .field-grid{grid-template-columns:1fr}
+  .m-grid{grid-template-columns:1fr}
+  .leg-card-inner{padding:12px 14px}
+  .card-actions{gap:5px}
+  .edit-toggle,.delete-leg-btn{padding:5px 10px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page">
+  <header>
+    <div class="header-inner">
+      <div class="header-eyebrow">Summer 2026 · Travel Itinerary</div>
+      <h1>Greece &amp; Türkiye</h1>
+      <div class="header-sub">May 26 – June 9 &nbsp;·&nbsp; RDU → ATH → NAX → SKG → IST → RDU</div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Destinations</div></div>
+        <div class="stat"><div class="stat-val">14</div><div class="stat-lbl">Nights</div></div>
+        <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Rooms</div></div>
+        <div class="stat"><div class="stat-val" id="todo-count">—</div><div class="stat-lbl">To book</div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="sync-bar">
+    <div class="sync-inner">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span class="sync-lbl" id="sync-label">Connecting…</span>
+    </div>
+  </div>
+
+  <main id="main"></main>
+</div>
+
+<!-- ADD LEG MODAL -->
+<div class="modal-overlay" id="leg-modal" style="display:none" onclick="if(event.target===this)closeLegModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">Add itinerary item</div>
+      <button class="modal-close" onclick="closeLegModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-field">
+        <div class="m-label">Type</div>
+        <div class="type-selector">
+          <div class="type-opt" id="opt-flight" onclick="selectType('flight')"><div class="type-icon">✈️</div><div class="type-lbl">Flight</div></div>
+          <div class="type-opt" id="opt-stay"    onclick="selectType('stay')"  ><div class="type-icon">🏨</div><div class="type-lbl">Stay</div></div>
+          <div class="type-opt" id="opt-transit" onclick="selectType('transit')"><div class="type-icon">🚢</div><div class="type-lbl">Transit</div></div>
+        </div>
+        <div class="m-err" id="err-type">Please select a type.</div>
+      </div>
+      <div class="m-field">
+        <div class="m-label">Name / Description <span style="color:#DC2626">*</span></div>
+        <input class="m-input" id="new-name" placeholder="e.g. Santorini Ferry, Hotel Check-in" autocomplete="off">
+        <div class="m-err" id="err-name">Name is required.</div>
+      </div>
+      <div class="m-grid">
+        <div class="m-field">
+          <div class="m-label">Start date <span style="color:#DC2626">*</span></div>
+          <input class="m-input" id="new-start" type="date">
+          <div class="m-err" id="err-start">Required.</div>
+        </div>
+        <div class="m-field">
+          <div class="m-label">End date <span style="color:#9CA3AF">(optional)</span></div>
+          <input class="m-input" id="new-end" type="date">
+        </div>
+      </div>
+      <div class="m-field">
+        <div class="m-label">Notes <span style="color:#9CA3AF">(optional)</span></div>
+        <input class="m-input" id="new-note" placeholder="Confirmation #, details…" autocomplete="off">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeLegModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmAddLeg()">Add to itinerary</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ACTIVITY MODAL -->
+<div class="modal-overlay" id="act-modal" style="display:none" onclick="if(event.target===this)closeActModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="act-modal-title">Add activity</div>
+      <button class="modal-close" onclick="closeActModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-field">
+        <div class="m-label">Activity name <span style="color:#DC2626">*</span></div>
+        <input class="m-input" id="act-name" placeholder="e.g. Acropolis tour" autocomplete="off">
+        <div class="m-err" id="err-act-name">Name is required.</div>
+      </div>
+      <div class="m-field">
+        <div class="m-label">Address / Location <span style="color:#9CA3AF">(optional)</span></div>
+        <input class="m-input" id="act-addr" placeholder="Venue or street address" autocomplete="off">
+      </div>
+      <div class="m-grid">
+        <div class="m-field">
+          <div class="m-label">Date <span style="color:#9CA3AF">(optional)</span></div>
+          <input class="m-input" id="act-date" type="date">
+          <div class="m-err" id="err-act-date">Must be within the stay.</div>
+        </div>
+        <div class="m-field">
+          <div class="m-label">Confirmation # <span style="color:#9CA3AF">(optional)</span></div>
+          <input class="m-input" id="act-conf" placeholder="Booking ref" autocomplete="off">
+        </div>
+      </div>
+      <div class="m-grid">
+        <div class="m-field">
+          <div class="m-label">Start time</div>
+          <input class="m-input" id="act-t0" type="time">
+        </div>
+        <div class="m-field">
+          <div class="m-label">End time</div>
+          <input class="m-input" id="act-t1" type="time">
+        </div>
+      </div>
+      <div class="m-field">
+        <div class="m-label">Notes <span style="color:#9CA3AF">(optional)</span></div>
+        <input class="m-input" id="act-notes" placeholder="Any extra details" autocomplete="off">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeActModal()">Cancel</button>
+      <button class="btn-primary" id="act-save-btn" onclick="confirmActivity()">Add activity</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL='https://pzefzoypgfwytehjosgt.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZWZ6b3lwZ2Z3eXRlaGpvc2d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTMwMzQsImV4cCI6MjA5Mzg2OTAzNH0.J4zxmWTMDJNMFKWvJDWqan9opxl0gfNYPLE_jRqlqXk';
+
+const BASE_LEGS=[
+  {id:'rdu-jfk',type:'flight',name:'RDU → JFK',date:'May 26',sd:'2026-05-26',
+   detail:'American Airlines · Leg 1 outbound',
+   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 1234'},{label:'Depart time',key:'dt',ph:'e.g. 7:00 AM'}],status:'pending',order:0},
+  {id:'jfk-ath',type:'flight',name:'JFK → ATH',date:'May 26',sd:'2026-05-26',
+   detail:'American Airlines · Arrive Athens ~10:00 AM local',
+   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 100'},{label:'Depart JFK',key:'dt',ph:'e.g. 11:55 PM'}],status:'confirmed',order:10},
+  {id:'ath-hotel',type:'stay',name:'Athens — Grand Hyatt',date:'May 26–29 · 3 nights',sd:'2026-05-26',ed:'2026-05-29',
+   detail:'2 rooms booked · Check-in May 26 · Check-out May 29',
+   fields:[{label:'Confirmation #',key:'conf',ph:'Confirmation number'},{label:'Room types',key:'rooms',ph:'e.g. 2× King Deluxe'}],status:'confirmed',order:20},
+  {id:'ath-naxos',type:'transit',name:'Athens → Naxos',date:'May 29',sd:'2026-05-29',
+   todo:'Ferry from Piraeus ~5 hr (Blue Star Ferries) or flight ATH→JNX ~40 min.',
+   fields:[{label:'Mode',key:'mode',ph:'Ferry / Flight'},{label:'Booking ref',key:'ref',ph:'Confirmation #'}],status:'pending',order:30},
+  {id:'naxos-stay',type:'stay',name:'Naxos — VRBO',date:'Fri May 29 – Jun 3 · 5 nights',sd:'2026-05-29',ed:'2026-06-03',
+   detail:'VRBO booked · Check-out Jun 3',
+   fields:[{label:'VRBO confirmation',key:'conf',ph:'Reservation code'},{label:'Address',key:'addr',ph:'Property address'}],status:'confirmed',order:40},
+  {id:'naxos-thess',type:'transit',name:'Naxos → Thessaloniki',date:'Jun 3',sd:'2026-06-03',
+   todo:'Ferry to Piraeus then Aegean flight ATH→SKG (~50 min). Or ferry + train (~5 hr).',
+   fields:[{label:'Mode',key:'mode',ph:'e.g. Ferry + Flight'},{label:'Booking refs',key:'refs',ph:'Confirmation numbers'}],status:'pending',order:50},
+  {id:'thess-stay',type:'stay',name:'Thessaloniki — VRBO',date:'Jun 3–5 · 2 nights (possibly 3)',sd:'2026-06-03',ed:'2026-06-05',
+   detail:'VRBO booked · Check-in Jun 3 · Check-out Jun 5',
+   extend:'Possible 1-night extension to Jun 6 — confirm before booking transfer.',
+   fields:[{label:'VRBO confirmation',key:'conf',ph:'Reservation code'},{label:'Address',key:'addr',ph:'Property address'}],status:'confirmed',order:60},
+  {id:'skg-ist',type:'flight',name:'Thessaloniki → Istanbul',date:'Jun 6',sd:'2026-06-06',
+   detail:'Booked via United · Operated by Turkish Airlines (SKG → IST)',
+   fields:[{label:'Flight #',key:'fn',ph:'e.g. TK 1234'},{label:'Depart time',key:'dt',ph:'e.g. 10:30 AM'}],status:'confirmed',order:70},
+  {id:'ist-stay',type:'stay',name:'Istanbul — accommodation',date:'Jun 6–8 or 9',sd:'2026-06-06',ed:'2026-06-09',
+   todo:'Book accommodation in Istanbul for ~3 nights.',
+   fields:[{label:'Hotel / property',key:'pname',ph:'Name of property'},{label:'Confirmation',key:'conf',ph:'Booking reference'}],status:'pending',order:80},
+  {id:'ist-ath',type:'transit',name:'Istanbul → Athens',date:'Jun 8 or 9',sd:'2026-06-08',
+   todo:'Turkish Air or Aegean (IST→ATH ~2 hr). Book Jun 8 for comfortable Jun 9 departure.',
+   fields:[{label:'Flight #',key:'fn',ph:'Flight number'},{label:'Date',key:'dt',ph:'Jun 8 or Jun 9'}],status:'pending',order:90},
+  {id:'ath-jfk',type:'flight',name:'Athens → JFK',date:'Jun 9',sd:'2026-06-09',
+   detail:'American Airlines · Return leg 1',
+   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 200'},{label:'Depart ATH',key:'dt',ph:'e.g. 9:05 AM'}],status:'confirmed',order:100},
+  {id:'jfk-rdu',type:'flight',name:'JFK → RDU',date:'Jun 9',sd:'2026-06-09',
+   detail:'American Airlines · Return leg 2',
+   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 1235'},{label:'Depart JFK',key:'dt',ph:'e.g. 7:30 PM'}],status:'confirmed',order:110},
+];
+
+let tripData={};
+let saveTimer=null;
+let openPanels={};
+let insertAfterIndex=null;
+let selectedType=null;
+let actParentId=null;
+let editActId=null;
+
+function customLegs(){return tripData.customLegs||[];}
+function allLegs(){return[...BASE_LEGS,...customLegs()].sort((a,b)=>(a.order||0)-(b.order||0));}
+function getLegData(id){
+  if(!tripData[id])tripData[id]={status:null,fields:{},note:'',activities:[]};
+  if(!tripData[id].activities)tripData[id].activities=[];
+  return tripData[id];
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(d){if(!d)return'';return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function fmtTime(t){if(!t)return'';const[h,m]=t.split(':');const hh=parseInt(h);return`${hh%12||12}:${m}${hh<12?'am':'pm'}`;}
+function typeInfo(t){
+  if(t==='flight')return{dot:'dot-flight',badge:'type-flight',label:'Flight'};
+  if(t==='stay')  return{dot:'dot-stay',  badge:'type-stay',  label:'Stay'};
+  return                 {dot:'dot-transit',badge:'type-transit',label:'Transit'};
+}
+
+/* ── SUPABASE ──────────────────────────────────────────────────────── */
+async function loadData(){
+  setSyncState('syncing','Loading…');
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/itinerary?id=eq.trip&select=data`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
+    const rows=await r.json();
+    if(rows&&rows.length>0&&rows[0].data)tripData=rows[0].data;
+    setSyncState('synced','All changes saved');
+  }catch(e){setSyncState('error','Could not connect');}
+  render();
+}
+async function saveData(){
+  setSyncState('syncing','Saving…');
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/itinerary?id=eq.trip`,{
+      method:'PATCH',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({data:tripData,updated_at:new Date().toISOString()})
+    });
+    setSyncState('synced','Saved · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){setSyncState('error','Save failed');}
+}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveData,1200);}
+function setSyncState(s,l){
+  document.getElementById('sync-dot').className='sync-dot '+s;
+  document.getElementById('sync-label').textContent=l;
+}
+function todoCount(){
+  return allLegs().filter(l=>{const d=tripData[l.id];return((d&&d.status)?d.status:l.status)==='pending';}).length;
+}
+
+/* ── RENDER ────────────────────────────────────────────────────────── */
+function render(){
+  document.getElementById('todo-count').textContent=todoCount();
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  const legs=allLegs();
+
+  main.appendChild(insertZone(-1));
+
+  legs.forEach((leg,i)=>{
+    const d=getLegData(leg.id);
+    const status=d.status||leg.status;
+    const isOpen=openPanels[leg.id];
+    const ti=typeInfo(leg.type);
+
+    // build fields
+    const fk=(f)=>f.key+'_'+leg.id;
+    let fHTML='<div class="field-grid">';
+    (leg.fields||[]).forEach(f=>{
+      const v=(d.fields&&d.fields[fk(f)])||'';
+      fHTML+=`<div class="field-row"><div class="field-label">${f.label}</div>
+        <input class="field-input" type="text" placeholder="${f.ph}" value="${esc(v)}"
+          oninput="updateField('${leg.id}','${fk(f)}',this.value)" autocomplete="off"></div>`;
+    });
+    fHTML+='</div>';
+    fHTML+=`<div class="field-row" style="margin-top:10px"><div class="field-label">Notes</div>
+      <input class="field-input" type="text" placeholder="Add a note…" value="${esc(d.note||'')}"
+        oninput="updateNote('${leg.id}',this.value)" autocomplete="off"></div>`;
+    fHTML+=`<div class="status-row"><label>Status</label>
+      <select class="status-select" onchange="updateStatus('${leg.id}',this.value)">
+        <option value="confirmed" ${status==='confirmed'?'selected':''}>✓ Confirmed</option>
+        <option value="pending" ${status==='pending'?'selected':''}>⚠ To book</option>
+      </select></div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(11,110,140,.15)">
+        <button onclick="confirmDeleteLeg('${leg.id}')" style="font-size:12px;font-family:Inter,sans-serif;background:none;border:1px solid rgba(192,104,58,.4);border-radius:8px;padding:7px 14px;cursor:pointer;color:#8B3E1C;min-height:36px">
+          Remove this item
+        </button>
+      </div>`;
+
+    // saved summary
+    const parts=[];
+    (leg.fields||[]).forEach(f=>{const v=d.fields&&d.fields[fk(f)];if(v)parts.push(`<span>${esc(v)}</span>`);});
+    if(d.note)parts.push(`"${esc(d.note)}"`);
+    const savedSummary=parts.length?`<div class="saved-values">${parts.join(' &nbsp;·&nbsp; ')}</div>`:'';
+
+    // activities
+    const acts=d.activities||[];
+    let aHTML=`<div class="activities-section">
+      <div class="activities-header">
+        <div class="activities-label">Activities &amp; plans</div>
+        <button class="add-act-btn" onclick="openActModal('${leg.id}')">+ Add</button>
+      </div>`;
+    if(!acts.length){
+      aHTML+=`<div class="no-acts">No activities yet — add tours, restaurants, excursions…</div>`;
+    }else{
+      acts.forEach(act=>{
+        const times=[act.t0?fmtTime(act.t0):'',act.t1?fmtTime(act.t1):''].filter(Boolean).join('–');
+        const meta=[act.date?fmtDate(act.date):'',times,act.addr,act.conf?`Ref: ${act.conf}`:''].filter(Boolean);
+        aHTML+=`<div class="activity-item">
+          <div class="act-dot"></div>
+          <div class="act-body">
+            <div class="act-name">${esc(act.name)}</div>
+            ${meta.length?`<div class="act-meta">${meta.map(esc).join(' · ')}</div>`:''}
+            ${act.notes?`<div class="act-meta" style="font-style:italic">${esc(act.notes)}</div>`:''}
+          </div>
+          <div class="act-btns">
+            <button class="act-edit-btn" onclick="openEditAct('${leg.id}','${act.id}')">edit</button>
+            <button class="act-del-btn" onclick="deleteAct('${leg.id}','${act.id}')">✕</button>
+          </div>
+        </div>`;
+      });
+    }
+    aHTML+='</div>';
+
+    const wrapper=document.createElement('div');
+    wrapper.className='leg';
+    wrapper.innerHTML=`
+      <div class="tl-col">
+        <div class="dot ${ti.dot}"></div>
+        <div class="vline"></div>
+      </div>
+      <div class="leg-card">
+        <div class="leg-card-inner">
+          <div class="leg-top">
+            <div style="flex:1;min-width:0">
+              <div class="leg-name">${esc(leg.name)}
+                <span class="status-pill ${status==='confirmed'?'pill-confirmed':'pill-pending'}">
+                  ${status==='confirmed'?'confirmed':'to book'}
+                </span>
+              </div>
+              <div class="leg-date">${esc(leg.date||'')}</div>
+            </div>
+            <div class="card-actions">
+              <button class="edit-toggle" onclick="togglePanel('${leg.id}')">${isOpen?'done':'edit'}</button>
+            </div>
+          </div>
+          <div class="type-badge ${ti.badge}">${ti.label}</div>
+          ${leg.detail?`<div class="leg-detail">${esc(leg.detail)}</div>`:''}
+          ${leg.todo?`<div class="todo-hint">💡 ${esc(leg.todo)}</div>`:''}
+          ${leg.extend?`<div class="extend-hint">⚠ ${esc(leg.extend)}</div>`:''}
+          ${savedSummary}
+        </div>
+        ${aHTML}
+        <div class="edit-panel ${isOpen?'open':''}">${fHTML}</div>
+      </div>`;
+    main.appendChild(wrapper);
+    main.appendChild(insertZone(i));
+  });
+}
+
+function insertZone(afterIndex){
+  const div=document.createElement('div');
+  div.className='insert-zone';
+  div.innerHTML=`<div class="insert-trigger">
+    <div class="insert-line"></div>
+    <button class="insert-btn" onclick="openLegModal(${afterIndex})">+ add item here</button>
+    <div class="insert-line"></div>
+  </div>`;
+  return div;
+}
+
+/* ── DELETE ─────────────────────────────────────────────────────────── */
+function confirmDeleteLeg(id){
+  if(!confirm('Remove this item from the itinerary?'))return;
+  // Remove from customLegs if custom, otherwise mark as deleted in tripData
+  const isCustom=customLegs().some(l=>l.id===id);
+  if(isCustom){
+    tripData.customLegs=(tripData.customLegs||[]).filter(l=>l.id!==id);
+    delete tripData[id];
+  }else{
+    // For base legs: mark hidden
+    if(!tripData._hidden)tripData._hidden=[];
+    if(!tripData._hidden.includes(id))tripData._hidden.push(id);
+  }
+  openPanels[id]=false;
+  scheduleSave();render();
+}
+
+/* ── ADD LEG MODAL ──────────────────────────────────────────────────── */
+function openLegModal(afterIndex){
+  insertAfterIndex=afterIndex;selectedType=null;
+  ['new-name','new-start','new-end','new-note'].forEach(id=>document.getElementById(id).value='');
+  ['opt-flight','opt-stay','opt-transit'].forEach(id=>document.getElementById(id).className='type-opt');
+  ['err-type','err-name','err-start'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('leg-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('new-name').focus(),80);
+}
+function closeLegModal(){document.getElementById('leg-modal').style.display='none';}
+function selectType(t){
+  selectedType=t;
+  ['flight','stay','transit'].forEach(x=>document.getElementById('opt-'+x).className='type-opt'+(x===t?' sel-'+t:''));
+  document.getElementById('err-type').style.display='none';
+}
+function confirmAddLeg(){
+  let ok=true;
+  if(!selectedType){document.getElementById('err-type').style.display='block';ok=false;}
+  const name=document.getElementById('new-name').value.trim();
+  if(!name){document.getElementById('err-name').style.display='block';ok=false;}
+  const start=document.getElementById('new-start').value;
+  if(!start){document.getElementById('err-start').style.display='block';ok=false;}
+  if(!ok)return;
+  const end=document.getElementById('new-end').value;
+  const note=document.getElementById('new-note').value.trim();
+  const dateLabel=end?`${fmtDate(start)} – ${fmtDate(end)}`:fmtDate(start);
+  const newId='custom-'+Date.now();
+  const legs=allLegs();
+  let order;
+  if(insertAfterIndex<0){order=(legs.length>0?(legs[0].order||0)-5:0);}
+  else if(insertAfterIndex>=legs.length-1){order=(legs[legs.length-1].order||legs.length*10)+10;}
+  else{const a=legs[insertAfterIndex].order||(insertAfterIndex*10);const b=legs[insertAfterIndex+1].order||((insertAfterIndex+1)*10);order=(a+b)/2;}
+  const newLeg={id:newId,custom:true,type:selectedType,name,date:dateLabel,sd:start,ed:end||null,fields:[],status:'pending',detail:note||'',order};
+  if(!tripData.customLegs)tripData.customLegs=[];
+  tripData.customLegs.push(newLeg);
+  getLegData(newId);
+  closeLegModal();scheduleSave();render();
+}
+
+/* ── ACTIVITY MODAL ─────────────────────────────────────────────────── */
+function openActModal(legId){
+  actParentId=legId;editActId=null;
+  document.getElementById('act-modal-title').textContent='Add activity';
+  document.getElementById('act-save-btn').textContent='Add activity';
+  ['act-name','act-addr','act-conf','act-notes'].forEach(id=>document.getElementById(id).value='');
+  ['act-date','act-t0','act-t1'].forEach(id=>document.getElementById(id).value='');
+  ['err-act-name','err-act-date'].forEach(id=>document.getElementById(id).style.display='none');
+  const leg=allLegs().find(l=>l.id===legId);
+  const di=document.getElementById('act-date');
+  di.min=leg&&leg.sd?leg.sd:'';di.max=leg&&leg.ed?leg.ed:'';
+  document.getElementById('act-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('act-name').focus(),80);
+}
+function openEditAct(legId,actId){
+  actParentId=legId;editActId=actId;
+  const act=getLegData(legId).activities.find(a=>a.id===actId);
+  if(!act)return;
+  document.getElementById('act-modal-title').textContent='Edit activity';
+  document.getElementById('act-save-btn').textContent='Save changes';
+  document.getElementById('act-name').value=act.name||'';
+  document.getElementById('act-addr').value=act.addr||'';
+  document.getElementById('act-conf').value=act.conf||'';
+  document.getElementById('act-notes').value=act.notes||'';
+  document.getElementById('act-date').value=act.date||'';
+  document.getElementById('act-t0').value=act.t0||'';
+  document.getElementById('act-t1').value=act.t1||'';
+  ['err-act-name','err-act-date'].forEach(id=>document.getElementById(id).style.display='none');
+  const leg=allLegs().find(l=>l.id===legId);
+  const di=document.getElementById('act-date');
+  di.min=leg&&leg.sd?leg.sd:'';di.max=leg&&leg.ed?leg.ed:'';
+  document.getElementById('act-modal').style.display='flex';
+}
+function closeActModal(){document.getElementById('act-modal').style.display='none';}
+function confirmActivity(){
+  let ok=true;
+  const name=document.getElementById('act-name').value.trim();
+  if(!name){document.getElementById('err-act-name').style.display='block';ok=false;}
+  const dateVal=document.getElementById('act-date').value;
+  const di=document.getElementById('act-date');
+  if(dateVal&&((di.min&&dateVal<di.min)||(di.max&&dateVal>di.max))){document.getElementById('err-act-date').style.display='block';ok=false;}
+  if(!ok)return;
+  const act={
+    id:editActId||'act-'+Date.now(),name,
+    addr:document.getElementById('act-addr').value.trim(),
+    conf:document.getElementById('act-conf').value.trim(),
+    notes:document.getElementById('act-notes').value.trim(),
+    date:dateVal,
+    t0:document.getElementById('act-t0').value,
+    t1:document.getElementById('act-t1').value,
+  };
+  const d=getLegData(actParentId);
+  if(editActId){const idx=d.activities.findIndex(a=>a.id===editActId);if(idx>-1)d.activities[idx]=act;}
+  else d.activities.push(act);
+  closeActModal();scheduleSave();render();
+}
+function deleteAct(legId,actId){
+  if(!confirm('Remove this activity?'))return;
+  const d=getLegData(legId);
+  d.activities=d.activities.filter(a=>a.id!==actId);
+  scheduleSave();render();
+}
+
+/* ── FIELD UPDATES ──────────────────────────────────────────────────── */
+function togglePanel(id){openPanels[id]=!openPanels[id];render();}
+function updateField(legId,key,val){const d=getLegData(legId);if(!d.fields)d.fields={};d.fields[key]=val;scheduleSave();}
+function updateNote(legId,val){getLegData(legId).note=val;scheduleSave();}
+function updateStatus(legId,val){getLegData(legId).status=val;scheduleSave();document.getElementById('todo-count').textContent=todoCount();}
+
+/* ── HIDDEN LEGS FILTER ─────────────────────────────────────────────── */
+const _origAllLegs=allLegs;
+function allLegs(){
+  const hidden=tripData._hidden||[];
+  return[...BASE_LEGS,...customLegs()]
+    .filter(l=>!hidden.includes(l.id))
+    .sort((a,b)=>(a.order||0)-(b.order||0));
+}
+
+loadData();
+</script>
+</body>
+</html>
