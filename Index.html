@@ -580,7 +580,7 @@ header h1{
     <div class="header-inner">
       <div class="header-eyebrow">Summer 2026 · Travel Itinerary</div>
       <h1>Greece &amp; Türkiye</h1>
-      <div class="header-sub">May 26 – June 9 &nbsp;·&nbsp; RDU → ATH → NAX → SKG → IST → RDU</div>
+      <div class="header-sub">May 25 – June 10 &nbsp;·&nbsp; RDU → ATH → NAX → SKG → IST → RDU</div>
       <div class="stats-row">
         <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Destinations</div></div>
         <div class="stat"><div class="stat-val">14</div><div class="stat-lbl">Nights</div></div>
@@ -702,43 +702,42 @@ const SUPABASE_URL='https://pzefzoypgfwytehjosgt.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6ZWZ6b3lwZ2Z3eXRlaGpvc2d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTMwMzQsImV4cCI6MjA5Mzg2OTAzNH0.J4zxmWTMDJNMFKWvJDWqan9opxl0gfNYPLE_jRqlqXk';
 
 const BASE_LEGS=[
-  {id:'rdu-jfk',type:'flight',name:'RDU → JFK',date:'May 25',sd:'2026-05-25',
-   detail:'American Airlines · Leg 1 outbound',
-   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 1234'},{label:'Depart time',key:'dt',ph:'e.g. 7:00 AM'}],status:'pending',order:0},
+  {id:'rdu-jfk',type:'flight',name:'RDU → JFK',date:'May 25 · Departs 5:04 AM',sd:'2026-05-25',
+   detail:'AA 4805 (operated by Republic Airways as American Eagle) · Departs RDU 5:04 AM · Arrives JFK 7:00 AM · Conf: JRNWOE',
+   fields:[{label:'Flight #',key:'fn',ph:'AA 4805'},{label:'Depart time',key:'dt',ph:'5:04 AM'}],status:'confirmed',order:0},
   {id:'jfk-ath',type:'flight',name:'JFK → ATH',date:'May 25 (arrives May 26)',sd:'2026-05-25',ed:'2026-05-26',
-   detail:'American Airlines · Departs JFK May 25 · Arrives Athens ~10:00 AM May 26',
-   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 100'},{label:'Depart JFK',key:'dt',ph:'e.g. 11:55 PM'}],status:'confirmed',order:10},
-  {id:'ath-hotel',type:'stay',name:'Athens — Grand Hyatt',date:'May 26–29 · 3 nights',sd:'2026-05-26',ed:'2026-05-29',
-   detail:'2 rooms booked · Check-in May 26 · Check-out May 29',
+   detail:'AA 334 · Departs JFK 5:20 PM May 25 · Arrives Athens 10:00 AM May 26 · Overnight flight · Conf: JRNWOE',
+   fields:[{label:'Flight #',key:'fn',ph:'AA 334'},{label:'Depart JFK',key:'dt',ph:'5:20 PM'}],status:'confirmed',order:10},
+  {id:'ath-hotel',type:'stay',name:'Athens — Grand Hyatt',date:'May 26–28 · 2 nights',sd:'2026-05-26',ed:'2026-05-28',
+   detail:'2 rooms booked · Check-in May 26 · Check-out May 28',
    fields:[{label:'Confirmation #',key:'conf',ph:'Confirmation number'},{label:'Room types',key:'rooms',ph:'e.g. 2× King Deluxe'}],status:'confirmed',order:20},
-  {id:'ath-naxos',type:'transit',name:'Athens → Naxos',date:'May 29',sd:'2026-05-29',
-   todo:'Ferry from Piraeus ~5 hr (Blue Star Ferries) or flight ATH→JNX ~40 min.',
-   fields:[{label:'Mode',key:'mode',ph:'Ferry / Flight'},{label:'Booking ref',key:'ref',ph:'Confirmation #'}],status:'pending',order:30},
-  {id:'naxos-stay',type:'stay',name:'Naxos — VRBO',date:'Fri May 29 – Jun 3 · 5 nights',sd:'2026-05-29',ed:'2026-06-03',
-   detail:'VRBO booked · Check-out Jun 3',
+  {id:'ath-naxos',type:'transit',name:'Piraeus → Naxos',date:'Thu May 28 · Departs 3:00 PM',sd:'2026-05-28',
+   detail:'SEA JETS · Vessel: CHAMPION JET 2 · Departs Piraeus 3:00 PM · Reservation: 1112QOUES · 6 passengers',
+   fields:[{label:'Reservation #',key:'ref',ph:'1112QOUES'},{label:'Vessel',key:'vessel',ph:'CHAMPION JET 2'}],status:'confirmed',order:30},
+  {id:'naxos-stay',type:'stay',name:'Naxos — VRBO',date:'May 28 – Jun 2 · 5 nights',sd:'2026-05-28',ed:'2026-06-02',
+   detail:'VRBO booked · Check-in May 28 · Check-out Jun 2',
    fields:[{label:'VRBO confirmation',key:'conf',ph:'Reservation code'},{label:'Address',key:'addr',ph:'Property address'}],status:'confirmed',order:40},
-  {id:'naxos-thess',type:'transit',name:'Naxos → Thessaloniki',date:'Jun 3',sd:'2026-06-03',
-   todo:'Ferry to Piraeus then Aegean flight ATH→SKG (~50 min). Or ferry + train (~5 hr).',
-   fields:[{label:'Mode',key:'mode',ph:'e.g. Ferry + Flight'},{label:'Booking refs',key:'refs',ph:'Confirmation numbers'}],status:'pending',order:50},
-  {id:'thess-stay',type:'stay',name:'Thessaloniki — VRBO',date:'Jun 3–5 · 2 nights (possibly 3)',sd:'2026-06-03',ed:'2026-06-05',
-   detail:'VRBO booked · Check-in Jun 3 · Check-out Jun 5',
-   extend:'Possible 1-night extension to Jun 6 — confirm before booking transfer.',
+  {id:'naxos-thess',type:'transit',name:'Naxos → Thessaloniki',date:'Tue Jun 2 · Departs 10:55 AM',sd:'2026-06-02',
+   detail:'A3567 operated by Olympic Air · Departs Naxos 10:55 AM · Arrives SKG 12:20 PM · Aegean ref: 8ZOTGV · 6 passengers',
+   fields:[{label:'Flight #',key:'fn',ph:'A3567'},{label:'Aegean ref',key:'ref',ph:'8ZOTGV'}],status:'confirmed',order:50},
+  {id:'thess-stay',type:'stay',name:'Thessaloniki — VRBO',date:'Jun 2–6 · 4 nights',sd:'2026-06-02',ed:'2026-06-06',
+   detail:'VRBO booked · Check-in Jun 2 · Check-out Jun 6',
    fields:[{label:'VRBO confirmation',key:'conf',ph:'Reservation code'},{label:'Address',key:'addr',ph:'Property address'}],status:'confirmed',order:60},
-  {id:'skg-ist',type:'flight',name:'Thessaloniki → Istanbul',date:'Jun 6',sd:'2026-06-06',
-   detail:'Booked via United · Operated by Turkish Airlines (SKG → IST)',
-   fields:[{label:'Flight #',key:'fn',ph:'e.g. TK 1234'},{label:'Depart time',key:'dt',ph:'e.g. 10:30 AM'}],status:'confirmed',order:70},
-  {id:'ist-stay',type:'stay',name:'Istanbul — accommodation',date:'Jun 6–8 or 9',sd:'2026-06-06',ed:'2026-06-09',
-   todo:'Book accommodation in Istanbul for ~3 nights.',
-   fields:[{label:'Hotel / property',key:'pname',ph:'Name of property'},{label:'Confirmation',key:'conf',ph:'Booking reference'}],status:'pending',order:80},
-  {id:'ist-ath',type:'transit',name:'Istanbul → Athens',date:'Jun 8 or 9',sd:'2026-06-08',
-   todo:'Turkish Air or Aegean (IST→ATH ~2 hr). Book Jun 8 for comfortable Jun 9 departure.',
-   fields:[{label:'Flight #',key:'fn',ph:'Flight number'},{label:'Date',key:'dt',ph:'Jun 8 or Jun 9'}],status:'pending',order:90},
-  {id:'ath-jfk',type:'flight',name:'Athens → JFK',date:'Jun 9',sd:'2026-06-09',
-   detail:'American Airlines · Return leg 1',
-   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 200'},{label:'Depart ATH',key:'dt',ph:'e.g. 9:05 AM'}],status:'confirmed',order:100},
-  {id:'jfk-rdu',type:'flight',name:'JFK → RDU',date:'Jun 9',sd:'2026-06-09',
-   detail:'American Airlines · Return leg 2',
-   fields:[{label:'Flight #',key:'fn',ph:'e.g. AA 1235'},{label:'Depart JFK',key:'dt',ph:'e.g. 7:30 PM'}],status:'confirmed',order:110},
+  {id:'skg-ist',type:'flight',name:'Thessaloniki → Istanbul',date:'Sat Jun 6 · Departs 9:35 AM',sd:'2026-06-06',
+   detail:'TK 1882 · Turkish Airlines · Departs SKG 9:35 AM · Arrives IST 11:05 AM · United conf: G02GFS · Turkish conf: T6XYCJ · Seats: 22A/B/C/D/E/F',
+   fields:[{label:'Flight #',key:'fn',ph:'TK 1882'},{label:'United conf',key:'conf',ph:'G02GFS'},{label:'Turkish conf',key:'conf2',ph:'T6XYCJ'}],status:'confirmed',order:70},
+  {id:'ist-stay',type:'stay',name:'Istanbul — VRBO',date:'Jun 6–9 · 3 nights',sd:'2026-06-06',ed:'2026-06-09',
+   detail:'3 Double Bedroom · Right Next to Blue Mosque, Akbiyik Caddesi, Sultanahmet · Check-in Jun 6 4:00 PM · Check-out Jun 9 11:00 AM · VRBO: HA-MM5ZMF',
+   fields:[{label:'VRBO reservation',key:'conf',ph:'HA-MM5ZMF'},{label:'Address',key:'addr',ph:'Akbiyik Caddesi, Sultanahmet, Istanbul 34122'}],status:'confirmed',order:80},
+  {id:'ist-ath',type:'transit',name:'Istanbul → Athens',date:'Tue Jun 9 · Departs 10:40 AM',sd:'2026-06-09',
+   detail:'A3991 operated by Aegean Airlines · Departs IST 10:40 AM · Arrives ATH 12:10 PM · Aegean ref: 92PFKS · Seats: 19A/B/C & 20A/B/C',
+   fields:[{label:'Flight #',key:'fn',ph:'A3991'},{label:'Aegean ref',key:'ref',ph:'92PFKS'}],status:'confirmed',order:90},
+  {id:'ath-jfk',type:'flight',name:'Athens → JFK',date:'Tue Jun 9 · Departs 3:55 PM',sd:'2026-06-09',
+   detail:'AA 333 · Departs ATH 3:55 PM · Arrives JFK 7:59 PM · Conf: CLPCKP',
+   fields:[{label:'Flight #',key:'fn',ph:'AA 333'},{label:'Depart ATH',key:'dt',ph:'3:55 PM'}],status:'confirmed',order:100},
+  {id:'jfk-rdu',type:'flight',name:'JFK → RDU',date:'Tue Jun 9 · Departs 10:00 PM (arrives Jun 10)',sd:'2026-06-09',
+   detail:'AA 4573 (operated by Republic Airways as American Eagle) · Departs JFK 10:00 PM · Arrives RDU 12:11 AM Jun 10 · Conf: CLPCKP',
+   fields:[{label:'Flight #',key:'fn',ph:'AA 4573'},{label:'Depart JFK',key:'dt',ph:'10:00 PM'}],status:'confirmed',order:110},
 ];
 
 let tripData={};
@@ -775,6 +774,20 @@ async function loadData(){
     if(rows&&rows.length>0&&rows[0].data)tripData=rows[0].data;
     setSyncState('synced','All changes saved');
   }catch(e){setSyncState('error','Could not connect');}
+  // Pre-seed Naxos cruise activity if not already there
+  const nd=getLegData('naxos-stay');
+  if(!nd.activities.find(a=>a.id==='naxos-cruise')){
+    nd.activities.push({
+      id:'naxos-cruise',
+      name:'Daily Cruise — Koufonissia & Rina Cave',
+      addr:'Jason Daily Cruises (via Viator)',
+      conf:'1397045175',
+      notes:'2 adults, 4 youths · Present e-ticket on the day',
+      date:'2026-05-31',
+      t0:'09:30',t1:'',
+    });
+    scheduleSave();
+  }
   render();
 }
 async function saveData(){
